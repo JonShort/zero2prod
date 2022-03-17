@@ -307,6 +307,44 @@ migrations. It will turn out to be useful for our test suite.
 
 **Configuration management**
 
-The [config](https://docs.rs/config/) crate is powerful for managing complex configuration, however not required by us at this stage
+The [config](https://docs.rs/config/) crate is powerful for managing complex configuration, e.g. files, env vars
 
+**Reading a configuration file**
 
+- Represent our app settings as a Rust type which implements `serde` `Deserialize` trait
+- Our current config values:
+  - app port
+  - DB connection parameters
+
+Here we use config to read from the `.yml` file, similar to the official example - [link](https://github.com/mehcode/config-rs/blob/master/examples/simple/main.rs)
+
+**Connecting to Postgres**
+
+- `PgConnection::connect` needs to be provided a single connection string; add a method to our `DatabaseSettings` struct to provide this
+- Within test we will connect to the running postgres instance
+- Assert on data existing using a SQL query
+
+## Persisting a new subscriber
+
+### Application state in actix-web
+
+- add info to the application state using the [`app_data`](https://docs.rs/actix-web/4.0.1/actix_web/struct.App.html#method.app_data) method on `App`
+- We try to add the connection as app state, but must be "cloneable"
+  - `HttpServer::new` takes a closure as arg so that multiple worker processes can be spun up
+  - We will instead provide an `Arc` (pointer w/ reference counting)
+  - `Arc` is abstracted behind `actix_web::web::Data` - [link](https://docs.rs/actix-web/4.0.1/actix_web/web/struct.Data.html)
+- Get data using a type-map, e.g. the arg `data: web::Data<String>` would retreive value of type "String" from app state
+
+### The INSERT query
+
+- Current shared connection doesn't work because sqlx expects a mutable reference to the connection (as this is unique)
+- sqlx docs reveal that `PgPool` includes the Executor trait which is required for the `.execute(a: impl Executor)` method
+- `PgPool` improves perf by managing a pool of connections, preventing one slow query from slowing down everything DB-related
+
+### Test isolation
+- Executing tests against a single DB causes tests to fail on the second run
+- Choices to fix:
+  - Rollback any operations after the test
+  - Create individual DBs per-test (chosen by Author)
+- `CREATE DATABASE` sql to create the individual DB
+- `sqlx::migrate!` macro to perform the DB migrations
