@@ -1,7 +1,7 @@
 # zero2prod
 Repo following the [Zero To Production In Rust][1] book by [Luca Palmieri][2]
 
-My notes while reading the book can be found in the [docs/][docs/] folder
+My notes while reading the book can be found in the [docs/](docs/) folder
 
 The source repo for the book can be found [here][2]
 
