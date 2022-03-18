@@ -132,3 +132,54 @@ The layering approach uses [Registry](https://docs.rs/tracing-subscriber/0.2.12/
 ### tracing-bunyan-formatter
 
 JSON formatted logs similar to express-bunyan-logger in node land
+
+### tracing-log
+
+By default log events aren't included in tracer, `LogTracer` provided by the `tracing-log` crate can provide this functionality
+
+### Refactoring main
+
+We move the tracing parts from `main.rs` into the module `telemetry.rs` (exposed via. `lib.rs`)
+
+### Logs for Integration Tests
+
+Refactoring the tracing setup into a module allows us to use it in our tests!
+
+Rule of thumb - everything that we use in our application should be reflected in our integration tests
+
+These fail because `init_subscriber` is being called multiple times (once per test), address this with [once_cell](https://crates.io/crates/once_cell) crate
+
+Works, but logs are distracting for regular test run - implement a `--nocapture` alternative but for tracing logs
+
+Achieve this by creating our own `Sink` for logs:
+- within `main` we set it to `std::io::stdout`
+- within tests we set the value based on a `TEST_LOG` env var
+
+To see logs from test cases:
+```bash
+# We are using the `bunyan` CLI to prettify the outputted logs
+# The original `bunyan` requires NPM, but you can install a Rust-port with
+# `cargo install bunyan`
+TEST_LOG=true cargo test health_check_works | bunyan
+```
+
+### Cleaning up instrumentation code - tracing::instrument
+
+- `tracing::instrument` macro helps "wrap" functions within a span declaration
+- instrumenting in this way makes it easier to build up spans without boilerplate
+
+### Protect your secrets - secrecy
+
+- `tracing::instrument` automatically attaches all arguments passed to the function to the context of the span - opt-out via. `skip()` instead of opt-in
+- Can make this opt-in with `secrecy::Secret` - explicitly mark which fields are considered sensitive
+
+### Request Id
+
+We still need to persist a request id across the entire lifeycle of a request
+
+We will implement this with another middleware `RequestIdMiddleware` that is in charge of:
+- Generating uuid
+- create span + attach id
+- wrap all other middlware in span
+
+Author already maintains this as a crate - [tracing-actix-web](https://crates.io/crates/tracing-actix-web) so we'll use that as a drop-in replacement for the `wrap(Logger::default())` in the `App` startup
