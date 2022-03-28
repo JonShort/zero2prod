@@ -21,7 +21,7 @@ jobs:
     env:
       SQLX_VERSION: 0.5.11
       SQLX_FEATURES: native-tls,postgres
-      SQLX_CACHEBUSTER: 0
+      SQLX_CACHEBUSTER: 1
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -46,7 +46,7 @@ jobs:
         id: cache-sqlx
         with:
           path: |
-            ~/.cargo/bin/sqlx
+            ~/.cargo/bin/cargo-sqlx
           key: ${{ runner.os }}-sqlx-${{ env.SQLX_VERSION }}-${{ env.SQLX_CACHEBUSTER }}
 
       - name: Install sqlx-cli 
@@ -66,6 +66,10 @@ jobs:
         run: |
           sudo apt-get install libpq-dev -y
           SKIP_DOCKER=true ./scripts/init_db.sh
+
+      - name: Check sqlx-data.json is up-to-date
+        run: |
+          cargo sqlx prepare --check -- --bin zero2prod
 
       - name: Run cargo test
         uses: actions-rs/cargo@v1
