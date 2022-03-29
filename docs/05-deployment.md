@@ -88,3 +88,21 @@ Currently our image is double the size of the base image
 **Caching for rust docker builds**
 
 Install deps first, then copy source code over (take advantage of layer caching)
+
+## Deploy to DigitalOcean apps platform
+
+- App spec reference documentation - [link](https://www.digitalocean.com/docs/app-platform/references/app-specification-reference/)
+- [doctl](https://docs.digitalocean.com/reference/doctl/) CLI for spinning up app using app spec
+
+### Inject secrets using env vars
+
+- Connection string will container values we do not want to commit to version control
+- We modify the `get_configuration` method to accept override values from env vars
+  - We need to deserialize these string -> number using [serde-aux](https://crates.io/crates/serde-aux)
+
+### Connecting to digital ocean's postgres instance
+
+- Get current connection string
+  - Component -> DB -> Connection Details (connection string)
+- Migrate DB
+  - `DATABASE_URL=YOUR-DIGITAL-OCEAN-DB-CONNECTION-STRING sqlx migrate run`
