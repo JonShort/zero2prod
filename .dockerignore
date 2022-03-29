@@ -1,10 +1,6 @@
-.github/
-docs/
-migrations/
-scripts/
-target/
-tests/
-.env
-Dockerfile
-README.md
-rustfmt.toml
+**
+!configuration/**
+!src/**
+!Cargo.lock
+!Cargo.toml
+!sqlx-data.json
