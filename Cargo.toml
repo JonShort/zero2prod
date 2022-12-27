@@ -21,29 +21,29 @@ strip = true  # Automatically strip symbols from the binary.
 [dependencies]
 actix-web = "4"
 chrono = "0.4"
-config = "0.12"
+config = { version = "0.13", default-features = false, features = ["yaml"] }
 secrecy = { version = "0.8", features = ["serde"] }
 serde = { version = "1", features = ["derive"]}
 serde-aux = "3"
 tokio = { version = "1", features = ["macros", "rt-multi-thread"] }
 tracing = { version = "0.1", features = ["log"] }
-tracing-actix-web = "0.5"
+tracing-actix-web = "0.6"
 tracing-bunyan-formatter = "0.3"
 tracing-log = "0.1"
 tracing-subscriber = { version = "0.3", features = ["registry", "env-filter"] }
-uuid = { version = "0.8", features = ["v4"] }
+uuid = { version = "1", features = ["v4", "serde"] }
 
 # Using table-like toml syntax to avoid a super-long line!
 [dependencies.sqlx]
-version = "0.5"
+version = "0.6"
 default-features = false
 features = [
+    "runtime-tokio-rustls",
     "chrono",
     "macros",
     "migrate",
     "offline",
     "postgres",
-    "runtime-actix-rustls",
     "uuid"
 ]
 
