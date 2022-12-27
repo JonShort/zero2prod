@@ -255,7 +255,7 @@ To store the subscribers' details we need to create a table; to do this we need 
 
 Install with:
 ```bash
-cargo install --version=0.5.11 sqlx-cli --no-default-features --features native-tls,postgres
+cargo install --version=~0.6 sqlx-cli --no-default-features --features rustls,postgres
 ```
 
 Create DB (not required for our docker, but needed in CI / env)
