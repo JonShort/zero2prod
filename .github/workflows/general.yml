@@ -19,7 +19,7 @@ jobs:
         ports:
           - 5432:5432
     env:
-      SQLX_VERSION: 0.5.11
+      SQLX_VERSION: 0.6.2
       SQLX_FEATURES: native-tls,postgres
       SQLX_CACHEBUSTER: 2
     steps:
@@ -105,7 +105,7 @@ jobs:
         ports:
           - 5432:5432
     env:
-      SQLX_VERSION: 0.5.11
+      SQLX_VERSION: 0.6.2
       SQLX_FEATURES: native-tls,postgres
       SQLX_CACHEBUSTER: 0
     steps:
@@ -164,7 +164,7 @@ jobs:
         ports:
           - 5432:5432
     env:
-      SQLX_VERSION: 0.5.11
+      SQLX_VERSION: 0.6.2
       SQLX_FEATURES: native-tls,postgres
       SQLX_CACHEBUSTER: 0
     steps:
