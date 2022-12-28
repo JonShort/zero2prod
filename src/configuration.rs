@@ -96,8 +96,8 @@ pub fn get_configuration() -> Result<Settings, ConfigError> {
         )
         .add_source(
             config::Environment::with_prefix("APP")
-            .prefix_separator("_")
-            .separator("__")
+                .prefix_separator("_")
+                .separator("__"),
         )
         .build()?;
 
