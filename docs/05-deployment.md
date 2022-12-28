@@ -94,6 +94,21 @@ Install deps first, then copy source code over (take advantage of layer caching)
 - App spec reference documentation - [link](https://www.digitalocean.com/docs/app-platform/references/app-specification-reference/)
 - [doctl](https://docs.digitalocean.com/reference/doctl/) CLI for spinning up app using app spec
 
+Install the digitalocean cli, `doctl`
+```bash
+brew install doctl
+```
+
+In DO, generate personal access token and authenticate with the cli
+```bash
+doctl auth init
+```
+
+Create app using spec file
+```bash
+doctl apps create --spec spec.yaml
+```
+
 ### Inject secrets using env vars
 
 - Connection string will container values we do not want to commit to version control
@@ -106,3 +121,18 @@ Install deps first, then copy source code over (take advantage of layer caching)
   - Component -> DB -> Connection Details (connection string)
 - Migrate DB
   - `DATABASE_URL=YOUR-DIGITAL-OCEAN-DB-CONNECTION-STRING sqlx migrate run`
+
+### Apply an appspec update
+
+```bash
+doctl apps update YOUR-APP-ID --spec=spec.yaml
+```
+
+### One last push
+
+```bash
+curl --request POST \
+--data 'name=le%20guin&email=ursula_le_guin%40gmail.com' \
+https://zero2prod-[ID].ondigitalocean.app/subscriptions \
+--verbose
+```
