@@ -88,12 +88,17 @@ pub fn get_configuration() -> Result<Settings, ConfigError> {
         .try_into()
         .expect("Failed to parse APP_ENVIRONMENT.");
 
+    let environment_filename = format!("{}.yaml", environment.as_str());
     let settings = Config::builder()
-        .add_source(config::File::from(configuration_directory.join("base")).required(true))
+        .add_source(config::File::from(configuration_directory.join("base.yaml")).required(true))
         .add_source(
-            config::File::from(configuration_directory.join(environment.as_str())).required(true),
+            config::File::from(configuration_directory.join(&environment_filename)).required(true),
         )
-        .add_source(config::Environment::with_prefix("app").separator("__"))
+        .add_source(
+            config::Environment::with_prefix("APP")
+            .prefix_separator("_")
+            .separator("__")
+        )
         .build()?;
 
     settings.try_deserialize::<Settings>()
