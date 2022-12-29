@@ -92,7 +92,7 @@ pub fn get_configuration() -> Result<Settings, ConfigError> {
     let settings = Config::builder()
         .add_source(config::File::from(configuration_directory.join("base.yaml")).required(true))
         .add_source(
-            config::File::from(configuration_directory.join(&environment_filename)).required(true),
+            config::File::from(configuration_directory.join(environment_filename)).required(true),
         )
         .add_source(
             config::Environment::with_prefix("APP")
