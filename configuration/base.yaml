@@ -1,8 +1,13 @@
 application:
   port: 8000
 database:
+  database_name: "newsletter"
   host: "localhost"
+  password: "password"
   port: 5432
   username: "postgres"
-  password: "password"
-  database_name: "newsletter"
+email_client:
+  authorization_token: "POSTMARK_API_TEST"
+  base_url: "localhost"
+  sender_email: "localhost@example.com"
+  timeout_milliseconds: 10000

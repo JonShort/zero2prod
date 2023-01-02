@@ -1,3 +1,11 @@
+# Build artifacts
 target/
+
+# Book PDF
 book/
+
+# IDE
 .vscode/
+
+# DigitalOcean appspec
+spec.yaml

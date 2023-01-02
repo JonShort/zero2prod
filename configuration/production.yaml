@@ -2,3 +2,9 @@ application:
   host: 0.0.0.0
 database:
   require_ssl: true
+email_client:
+  base_url: "https://api.postmarkapp.com"
+  # Set via. APP_EMAIL_CLIENT__SENDER_EMAIL
+  # sender_email
+  # Set via. APP_EMAIL_CLIENT__AUTHORIZATION_TOKEN
+  # authorization_token
